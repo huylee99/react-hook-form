@@ -9,6 +9,7 @@ function App() {
     formState: { errors },
     setError,
     reset,
+    watch
   } = useForm({
     defaultValues: {
       name: "",
@@ -23,14 +24,6 @@ function App() {
   });
 
   const onSubmit = handleSubmit(data => {
-    if (data.password !== data.confirmPassword) {
-      setError("confirmPassword", {
-        message: "Password and confirm password must be the same",
-      });
-
-      return;
-    }
-
     if (data.gender === "") {
       setError("gender", {
         message: "This field is required",
@@ -144,6 +137,11 @@ function App() {
               type="password"
               {...register("confirmPassword", {
                 required: true,
+                validate: (val) => {
+                  if (watch('password') !== val) {
+                    return "Your passwords do no match";
+                  }
+                }
               })}
               className="w-full rounded-md px-3 py-2"
             />
